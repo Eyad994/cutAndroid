@@ -20,14 +20,18 @@ public interface JsonPlaceHolderApi {
 
     @FormUrlEncoded
     @POST("login")
-    Call<ResponseBody> loginPost(
+    Call<Login> loginPost(
       @Field("email") String email,
       @Field("password") String password
     );
 
+    // @FormUrlEncoded
+    @POST("register")
+    Call<Register> registerPost(@Body Register requestObj);
+
     @FormUrlEncoded
     @POST("register")
-    Call<ResponseBody> registerPost(@Body Object requestObj);
+    Call<ResponseBody> registerPost(@FieldMap Map<String, String> fields);
 
     @POST("login")
     Call<ResponseBody> createPost(@Body RequestBody requestBody);

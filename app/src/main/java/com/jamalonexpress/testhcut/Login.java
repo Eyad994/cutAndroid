@@ -15,6 +15,12 @@ public class Login {
     @Expose
     private String email;
 
+    public Login(Integer id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
     public Integer getId() {
         return id;
     }

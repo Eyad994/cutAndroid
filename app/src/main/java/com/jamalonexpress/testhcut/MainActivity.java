@@ -1,16 +1,24 @@
 package com.jamalonexpress.testhcut;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,13 +29,27 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textViewResult;
     JsonPlaceHolderApi jsonPlaceHolderApi;
+    TextView errorMsg;
+    TextView registerLink;
+    EditText email, password;
+    Button login;
+    RelativeLayout relativeLayout;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        registerLink = findViewById(R.id.link_signup);
+        relativeLayout = findViewById(R.id.relativeLay);
+        errorMsg = findViewById(R.id.error_text);
         textViewResult = findViewById(R.id.text_view_result);
+        email = findViewById(R.id.input_email);
+        password = findViewById(R.id.input_password);
+        login = findViewById(R.id.btn_login);
+
+        textViewResult.setVisibility(View.GONE);
 
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -40,41 +62,85 @@ public class MainActivity extends AppCompatActivity {
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
+        registerLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        loginRequest("testUser@gmail.com", "12345678");
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeKeyboard();
+
+                String strEmail = email.getText().toString();
+                String strPassword = password.getText().toString();
+
+                if (strEmail.matches("") || strPassword.matches("")) {
+                    errorMsg.setVisibility(View.VISIBLE);
+                    errorMsg.setText("Empty email or password!");
+                    return;
+                }
+
+                if (isValidEmail(email.getText())) {
+                    loginRequest(strEmail, strPassword);
+                }else{
+                    errorMsg.setText("Incorrect email or password!");
+                }
+
+            }
+        });
+
+        // loginRequest("testUser@gmail.com", "12345678");
         // getRequest();
         // postRequest();
     }
 
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     private void loginRequest(String email, String password) {
-        Call<ResponseBody> call = jsonPlaceHolderApi.loginPost(email, password);
+        Call<Login> call = jsonPlaceHolderApi.loginPost(email, password);
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<Login>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+            public void onResponse(Call<Login> call, Response<Login> response) {
 
                 if (!response.isSuccessful()) {
-                    if (response.code() == 400) {
-                        textViewResult.setText("Please check your email and/or password");
-                        return;
-                    }
-                    textViewResult.setText("Code: " + response.code() + "\n" + response.message());
+                    errorMsg.setVisibility(View.VISIBLE);
+                    Log.d(TAG, "onNotSuccessful: " + response.code());
+                    errorMsg.setText("These credentials do not match our records");
                     return;
                 }
 
-                try {
-                    textViewResult.setText("Code: " + response.code() + "\n" + response.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                Log.d(TAG, "onResponse: " + response.code());
+                List<Login> logins = Collections.singletonList(response.body());
+
+                for (Login login : logins) {
+                    String Content = "Name: " + login.getName() + "\n";
+                    Content += "ID: " + login.getId() + "\n";
+                    errorMsg.setVisibility(View.VISIBLE);
+                    errorMsg.setText(Content);
                 }
+
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                textViewResult.setText(t.getMessage());
+            public void onFailure(Call<Login> call, Throwable t) {
+                errorMsg.setText(t.getMessage());
             }
         });
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
 //    private void postRequest(){
