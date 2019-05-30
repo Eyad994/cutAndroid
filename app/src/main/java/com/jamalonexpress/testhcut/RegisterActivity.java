@@ -9,8 +9,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -33,6 +36,8 @@ public class RegisterActivity extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener datePickerDialog;
     Button btnRegister;
     JsonPlaceHolderApi jsonPlaceHolderApi;
+    CheckBox checkBox;
+    LinearLayout linearLayout;
     private static final String TAG = "RegisterActivity";
 
     @Override
@@ -48,6 +53,21 @@ public class RegisterActivity extends AppCompatActivity {
         dateEditText = findViewById(R.id.input_date);
         gender = findViewById(R.id.input_gender);
         btnRegister = findViewById(R.id.btn_register);
+        checkBox = findViewById(R.id.btn_check);
+        linearLayout = findViewById(R.id.serviceProvider);
+        
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    linearLayout.setVisibility(View.VISIBLE);
+                }
+                else {
+                    linearLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+        
 
         dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
