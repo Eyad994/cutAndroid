@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Log.d("Register", "onDateSet: "+ year + "/"+month+"/"+dayOfMonth);
-                dateEditText.setText(year + "/"+month+"/"+dayOfMonth);
+                dateEditText.setText(year + "-"+month+"-"+dayOfMonth);
             }
         };
 
@@ -98,13 +98,13 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void register(){
-        String mName = String.valueOf(name);
-        String mEmail = String.valueOf(email);
-        String mPassword = String.valueOf(password);
-        String mConfirmPass = String.valueOf(confirmPassword);
-        String mPhoneNumber = String.valueOf(phoneNumber);
-        String mDate = String.valueOf(dateEditText);
-        String mGender = String.valueOf(gender);
+        String mName = name.getText().toString();
+        String mEmail = email.getText().toString();
+        String mPassword = password.getText().toString();
+        String mConfirmPass = confirmPassword.getText().toString();
+        String mPhoneNumber = phoneNumber.getText().toString();
+        String mDate = dateEditText.getText().toString();
+        String mGender = gender.getText().toString();
 
        // final Register register = new Register(mName,mEmail,mPassword,mConfirmPass,mPhoneNumber,mDate,mGender);
 
@@ -119,14 +119,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Map<String, String> fields = new HashMap<>();
-        fields.put("name","eyad");
-        fields.put("email","eyad@gmail.com");
-        fields.put("password","12345678");
-        fields.put("password_confirmation","12345678");
-        fields.put("phone_number","0796714838");
-        fields.put("date_of_birth","2019-02-12");
-        fields.put("gender","Male");
+        final Map<String, String> fields = new HashMap<>();
+        fields.put("name",mName);
+        fields.put("email",mEmail);
+        fields.put("password",mPassword);
+        fields.put("password_confirmation",mConfirmPass);
+        fields.put("phone_number",mPhoneNumber);
+        fields.put("date_of_birth","1994-6-24");
+        fields.put("gender",mGender);
 
         Call<ResponseBody> call = jsonPlaceHolderApi.registerPost(fields);
 
@@ -138,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 ResponseBody registers = response.body();
-                Log.d(TAG, "onResponse: "+registers);
+                Log.d(TAG, "onResponse: "+fields);
             }
 
             @Override
