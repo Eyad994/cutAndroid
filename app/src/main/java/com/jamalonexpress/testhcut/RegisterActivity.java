@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Log.d("Register", "onDateSet: "+ year + "/"+month+"/"+dayOfMonth);
-                dateEditText.setText(year + "/"+month+"/"+dayOfMonth);
+                dateEditText.setText(year + "-"+month+"-"+dayOfMonth);
             }
         };
 
@@ -120,13 +120,13 @@ public class RegisterActivity extends AppCompatActivity {
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
         Map<String, String> fields = new HashMap<>();
-        fields.put("name","eyad");
-        fields.put("email","eyad@gmail.com");
-        fields.put("password","12345678");
-        fields.put("password_confirmation","12345678");
-        fields.put("phone_number","0796714838");
-        fields.put("date_of_birth","2019-02-12");
-        fields.put("gender","Male");
+        fields.put("name",mName);
+        fields.put("email",mEmail);
+        fields.put("password",mPassword);
+        fields.put("password_confirmation",mConfirmPass);
+        fields.put("phone_number",mPhoneNumber);
+        fields.put("date_of_birth",mDate);
+        fields.put("gender",mGender);
 
         Call<ResponseBody> call = jsonPlaceHolderApi.registerPost(fields);
 

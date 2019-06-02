@@ -20,7 +20,7 @@ public interface JsonPlaceHolderApi {
 
     @FormUrlEncoded
     @POST("login")
-    Call<Login> loginPost(
+    Call<ResponseBody> loginPost(
       @Field("email") String email,
       @Field("password") String password
     );

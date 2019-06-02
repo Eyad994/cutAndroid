@@ -16,9 +16,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.Collections;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:8000/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(RetrofitClient.getClient())
                 .build();
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -107,33 +108,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginRequest(String email, String password) {
-        Call<Login> call = jsonPlaceHolderApi.loginPost(email, password);
+        Call<ResponseBody> call = jsonPlaceHolderApi.loginPost(email, password);
 
-        call.enqueue(new Callback<Login>() {
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Login> call, Response<Login> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (!response.isSuccessful()) {
                     errorMsg.setVisibility(View.VISIBLE);
                     Log.d(TAG, "onNotSuccessful: " + response.code());
-                    errorMsg.setText("These credentials do not match our records");
+                    errorMsg.setText("Incorrect password!");
                     return;
                 }
 
                 Log.d(TAG, "onResponse: " + response.code());
-                List<Login> logins = Collections.singletonList(response.body());
-
-                for (Login login : logins) {
-                    String Content = "Name: " + login.getName() + "\n";
-                    Content += "ID: " + login.getId() + "\n";
-                    errorMsg.setVisibility(View.VISIBLE);
-                    errorMsg.setText(Content);
-                }
+                ResponseBody logins = response.body();
+                errorMsg.setText(response.message());
+//                for (Login login : l ogins) {
+//                    String Content = "Name: " + login.getName() + "\n";
+//                    Content += "ID: " + login.getId() + "\n";
+//                    errorMsg.setVisibility(View.VISIBLE);
+//                    errorMsg.setText(Content);
+//                }
 
             }
 
             @Override
-            public void onFailure(Call<Login> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "onFailure: "+t.getCause());
                 errorMsg.setText(t.getMessage());
             }
         });
