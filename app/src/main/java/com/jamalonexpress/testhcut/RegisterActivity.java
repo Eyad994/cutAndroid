@@ -9,8 +9,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -33,6 +36,8 @@ public class RegisterActivity extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener datePickerDialog;
     Button btnRegister;
     JsonPlaceHolderApi jsonPlaceHolderApi;
+    CheckBox checkBox;
+    LinearLayout linearLayout;
     private static final String TAG = "RegisterActivity";
 
     @Override
@@ -48,6 +53,21 @@ public class RegisterActivity extends AppCompatActivity {
         dateEditText = findViewById(R.id.input_date);
         gender = findViewById(R.id.input_gender);
         btnRegister = findViewById(R.id.btn_register);
+        checkBox = findViewById(R.id.btn_check);
+        linearLayout = findViewById(R.id.serviceProvider);
+        
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    linearLayout.setVisibility(View.VISIBLE);
+                }
+                else {
+                    linearLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+        
 
         dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,13 +118,13 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void register(){
-        String mName = String.valueOf(name);
-        String mEmail = String.valueOf(email);
-        String mPassword = String.valueOf(password);
-        String mConfirmPass = String.valueOf(confirmPassword);
-        String mPhoneNumber = String.valueOf(phoneNumber);
-        String mDate = String.valueOf(dateEditText);
-        String mGender = String.valueOf(gender);
+        String mName = name.getText().toString();
+        String mEmail = email.getText().toString();
+        String mPassword = password.getText().toString();
+        String mConfirmPass = confirmPassword.getText().toString();
+        String mPhoneNumber = phoneNumber.getText().toString();
+        String mDate = dateEditText.getText().toString();
+        String mGender = gender.getText().toString();
 
        // final Register register = new Register(mName,mEmail,mPassword,mConfirmPass,mPhoneNumber,mDate,mGender);
 
@@ -119,13 +139,15 @@ public class RegisterActivity extends AppCompatActivity {
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Map<String, String> fields = new HashMap<>();
+//        Map<String, String> fields = new HashMap<>();
+        final Map<String, String> fields = new HashMap<>();
         fields.put("name",mName);
         fields.put("email",mEmail);
         fields.put("password",mPassword);
         fields.put("password_confirmation",mConfirmPass);
         fields.put("phone_number",mPhoneNumber);
         fields.put("date_of_birth",mDate);
+        fields.put("date_of_birth","1994-6-24");
         fields.put("gender",mGender);
 
         Call<ResponseBody> call = jsonPlaceHolderApi.registerPost(fields);
@@ -138,7 +160,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 ResponseBody registers = response.body();
-                Log.d(TAG, "onResponse: "+registers);
+                Log.d(TAG, "onResponse: "+fields);
             }
 
             @Override

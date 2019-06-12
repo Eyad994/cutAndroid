@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = new Intent(MainActivity.this,MapsActivity.class);
+        startActivity(intent);
 
         registerLink = findViewById(R.id.link_signup);
         relativeLayout = findViewById(R.id.relativeLay);
