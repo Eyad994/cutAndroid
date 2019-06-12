@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(MainActivity.this,SectionPage.class);
+        Intent intent = new Intent(MainActivity.this, SectionPage.class);
         startActivity(intent);
 
         registerLink = findViewById(R.id.link_signup);

@@ -1,6 +1,7 @@
 package com.jamalonexpress.testhcut;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -46,7 +46,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, ""+titles.get(i), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(mContext, ""+titles.get(i), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, MapsActivity.class);
+                mContext.startActivity(intent);
             }
         });
 
@@ -65,6 +67,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            mContext = itemView.getContext();
 
             imageName = itemView.findViewById(R.id.image_name);
             imageView = itemView.findViewById(R.id.image);

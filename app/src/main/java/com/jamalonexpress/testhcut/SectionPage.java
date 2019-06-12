@@ -25,7 +25,7 @@ public class SectionPage extends AppCompatActivity {
         titles.add("test2");
         images.add(R.drawable.scissor);
         images.add(R.drawable.las);
-        images.add(R.drawable.scissor);
+        images.add(R.drawable.hair);
         images.add(R.drawable.las);
         images.add(R.drawable.scissor);
         images.add(R.drawable.las);
