@@ -42,9 +42,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(31.902765, 35.889524);
         LatLng amman = new LatLng(31.904623, 35.887657);
+        LatLng AmmanCenter = new LatLng(31.953838, 35.910577);
+        mMap.addMarker(new MarkerOptions().position(AmmanCenter).title("Amman Center")).setAlpha(0.0f);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"))
         .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mMap.addMarker(new MarkerOptions().position(amman).title("Marker in Amman"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AmmanCenter,12));
     }
 }
