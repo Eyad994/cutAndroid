@@ -18,9 +18,9 @@ import java.util.ArrayList;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
     private Context mContext;
     public ArrayList<String> titles;
-    public ArrayList<String> images;
+    public ArrayList<Integer> images;
 
-    public RecycleViewAdapter(Context mContext, ArrayList<String> titles, ArrayList<String> images) {
+    public RecycleViewAdapter(Context mContext, ArrayList<String> titles, ArrayList<Integer> images) {
         this.mContext = mContext;
         this.titles = titles;
         this.images = images;
@@ -40,7 +40,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         Glide.with(mContext)
                 .asBitmap()
                 .load(images.get(i))
-                .circleCrop()
                 .into(viewHolder.imageView);
         viewHolder.imageName.setText(titles.get(i));
 

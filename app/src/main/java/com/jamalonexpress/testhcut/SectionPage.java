@@ -10,24 +10,25 @@ import java.util.ArrayList;
 public class SectionPage extends AppCompatActivity {
 
     private ArrayList<String> titles = new ArrayList<>();
-    private ArrayList<String> images = new ArrayList<>();
+    private ArrayList<Integer> images = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_section_page);
 
-        titles.add("test");
+        //icons from --> www.flaticon.com
+        titles.add("test1");
         titles.add("test2");
-        images.add("https://image.flaticon.com/icons/svg/1810/1810109.svg");
-        images.add("drawable/laser.png");
-        titles.add("test");
+        titles.add("test1");
         titles.add("test2");
-        images.add("https://cdn.jamalon.com/c/p/3070376.jpg");
-        images.add("https://cdn.jamalon.com/c/p/3070376.jpg");
-        titles.add("test");
+        titles.add("test1");
         titles.add("test2");
-        images.add("https://cdn.jamalon.com/c/p/3070376.jpg");
-        images.add("https://cdn.jamalon.com/c/p/3070376.jpg");
+        images.add(R.drawable.scissor);
+        images.add(R.drawable.las);
+        images.add(R.drawable.scissor);
+        images.add(R.drawable.las);
+        images.add(R.drawable.scissor);
+        images.add(R.drawable.las);
 
         RecyclerView recyclerView = findViewById(R.id.recycleViewSections);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
