@@ -46,7 +46,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Toast.makeText(mContext, ""+titles.get(i), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(mContext, ""+titles.get(i), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, MapsActivity.class);
                 mContext.startActivity(intent);
             }

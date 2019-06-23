@@ -47,14 +47,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap bitmap = bitmapDrawable.getBitmap();
         Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
        // Bitmap testMethod = resizeImage(getApplicationContext(), R.drawable.scissor,100,100);
-        // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(31.902765, 35.889524);
         LatLng amman = new LatLng(31.904623, 35.887657);
         LatLng AmmanCenter = new LatLng(31.953838, 35.910577);
         mMap.addMarker(new MarkerOptions().position(AmmanCenter).title("Amman Center")).setAlpha(0.0f);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"))
-                .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            //  .setIcon(BitmapDescriptorFactory.fromBitmap(smallIcon));
+                //  .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+             .setIcon(BitmapDescriptorFactory.fromBitmap(smallIcon));
         mMap.addMarker(new MarkerOptions().position(amman).title("Marker in Amman"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AmmanCenter, 12));
 
@@ -62,19 +61,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
                         builder.setMessage("hi eyad");
                         builder.setTitle("title");
                         builder.setPositiveButton(android.R.string.ok, null);
-
                         AlertDialog dialog = builder.create();
                         dialog.show();
+                     //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 15));
 
-                    }
-                });
                 return false;
             }
         });
