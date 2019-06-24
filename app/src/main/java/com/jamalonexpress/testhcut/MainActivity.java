@@ -3,7 +3,6 @@ package com.jamalonexpress.testhcut;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

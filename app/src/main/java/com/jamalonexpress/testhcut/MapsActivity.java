@@ -3,9 +3,11 @@ package com.jamalonexpress.testhcut;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,11 +17,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.hitomi.cmlibrary.CircleMenu;
+import com.hitomi.cmlibrary.OnMenuSelectedListener;
+
+import androidx.fragment.app.FragmentActivity;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
-
+    String arrayName[] = {"Facebook", "Twitter",
+            "Youtube", "Linkedin", "Pinterest"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +37,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        CircleMenu circleMenu = findViewById(R.id.circle_menu);
+        circleMenu.setMainMenu(Color.RED,R.drawable.common_google_signin_btn_icon_dark, R.drawable.common_google_signin_btn_icon_disabled)
+                .addSubMenu(Color.BLUE, R.drawable.facebook)
+                .addSubMenu(Color.RED, R.drawable.pinterest)
+                .addSubMenu(Color.BLUE, R.drawable.linkedin)
+                .addSubMenu(Color.BLUE, R.drawable.twitter)
+                .addSubMenu(Color.BLACK, R.drawable.vk)
+                .setOnMenuSelectedListener(new OnMenuSelectedListener() {
+                    @Override
+                    public void onMenuSelected(int i) {
+                        Toast.makeText(MapsActivity.this, "Selected"+ arrayName[i], Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 
@@ -61,7 +84,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                Log.d(TAG, "onMarkerClick: "+ marker);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
                         builder.setMessage("hi eyad");
                         builder.setTitle("title");
                         builder.setPositiveButton(android.R.string.ok, null);
