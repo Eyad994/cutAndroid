@@ -15,6 +15,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,12 +39,13 @@ public class MainActivity extends AppCompatActivity {
     Button login;
     RelativeLayout relativeLayout;
     private static final String TAG = "MainActivity";
+    JSONObject Jobject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(MainActivity.this, SectionPage.class);
+        Intent intent = new Intent(MainActivity.this, MapsActivity.class);
         startActivity(intent);
 
         registerLink = findViewById(R.id.link_signup);
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8000/")
+                .baseUrl("http://10.0.2.2:8000/api/auth/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(RetrofitClient.getClient())
                 .build();
@@ -81,17 +86,18 @@ public class MainActivity extends AppCompatActivity {
                 String strEmail = email.getText().toString();
                 String strPassword = password.getText().toString();
 
-                if (strEmail.matches("") || strPassword.matches("")) {
-                    errorMsg.setVisibility(View.VISIBLE);
-                    errorMsg.setText("Empty email or password!");
-                    return;
-                }
-
-                if (isValidEmail(email.getText())) {
-                    loginRequest(strEmail, strPassword);
-                }else{
-                    errorMsg.setText("Incorrect email or password!");
-                }
+//                if (strEmail.matches("") || strPassword.matches("")) {
+//                    errorMsg.setVisibility(View.VISIBLE);
+//                    errorMsg.setText("Empty email or password!");
+//                    return;
+//                }
+//
+//                if (isValidEmail(email.getText())) {
+//                    loginRequest(strEmail, strPassword);
+//                } else {
+//                    errorMsg.setText("Incorrect email or password!");
+//                }
+                loginRequest(strEmail, strPassword);
 
             }
         });
@@ -119,13 +125,29 @@ public class MainActivity extends AppCompatActivity {
                 if (!response.isSuccessful()) {
                     errorMsg.setVisibility(View.VISIBLE);
                     Log.d(TAG, "onNotSuccessful: " + response.code());
-                    errorMsg.setText("Incorrect password!");
+                    errorMsg.setText("Incorrect email or password!" + response.code());
                     return;
                 }
 
-                Log.d(TAG, "onResponse: " + response.code());
+                try {
+                    Jobject = new JSONObject(response.body().string());
+                    //Log.d(TAG, "onResponse: "+ Jobject.getString("access_token"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 ResponseBody logins = response.body();
+                if (response.code() == 404) {
+                    return;
+                } else if (response.code() == 200) {
+                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                    //intent.putExtra("test", Jobject.getString("access_token"));
+                    startActivity(intent);
+                }
                 errorMsg.setText(response.message());
+//                Intent intent = new Intent(MainActivity.this, SectionPage.class);
+//                startActivity(intent);
 //                for (Login login : l ogins) {
 //                    String Content = "Name: " + login.getName() + "\n";
 //                    Content += "ID: " + login.getId() + "\n";
@@ -137,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(TAG, "onFailure: "+t.getCause());
+                Log.d(TAG, "onFailure: " + t.getCause());
                 errorMsg.setText(t.getMessage());
             }
         });
