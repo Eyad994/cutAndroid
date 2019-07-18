@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 closeKeyboard();
 
-                String strEmail = email.getText().toString();
-                String strPassword = password.getText().toString();
+                String strEmail = email.getText().toString().trim();
+                String strPassword = password.getText().toString().trim();
 
 //                if (strEmail.matches("") || strPassword.matches("")) {
 //                    errorMsg.setVisibility(View.VISIBLE);

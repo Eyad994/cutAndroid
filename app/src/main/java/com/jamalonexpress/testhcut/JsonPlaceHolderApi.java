@@ -18,6 +18,9 @@ public interface JsonPlaceHolderApi {
     @GET("users")
     Call<List<User>> getUsers();
 
+    @GET("lat")
+    Call<List<Provider>> getLatLng();
+
     @FormUrlEncoded
     @POST("login")
     Call<ResponseBody> loginPost(

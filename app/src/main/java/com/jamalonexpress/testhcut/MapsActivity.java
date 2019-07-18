@@ -1,5 +1,7 @@
 package com.jamalonexpress.testhcut;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,18 +18,26 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 
+import java.util.List;
+
 import androidx.fragment.app.FragmentActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
-    String arrayName[] = {"Facebook", "Twitter",
-            "Youtube", "Linkedin", "Pinterest"};
+    JsonPlaceHolderApi jsonPlaceHolderApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +48,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8000/api/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(RetrofitClient.getClient())
+                .build();
+
+        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
         FilterMenuLayout layout = findViewById(R.id.filter_menu);
         FilterMenu menu = new FilterMenu.Builder(this)
                 //.addItem(R.drawable.facebook)
-        .inflate(R.menu.menu_filter)//inflate  menu resource
-    .attach(layout)
+                .inflate(R.menu.menu_filter)//inflate  menu resource
+                .attach(layout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
                     public void onMenuItemClick(View view, int position) {
-                        Toast.makeText(MapsActivity.this, ""+ position, Toast.LENGTH_SHORT).show();
+                        switch (position) {
+                            case 0:
+                                Toast.makeText(MapsActivity.this, "1", Toast.LENGTH_SHORT).show();
+                                getAllProviders();
+                                break;
+                            case 1:
+                                Toast.makeText(MapsActivity.this, "2", Toast.LENGTH_SHORT).show();
+                                mMap.clear();
+                                break;
+                            case 2:
+                                Toast.makeText(MapsActivity.this, "3", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                Toast.makeText(MapsActivity.this, "XXX", Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
                     }
+
                     @Override
                     public void onMenuCollapse() {
                     }
+
                     @Override
                     public void onMenuExpand() {
                     }
@@ -97,7 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(31.902765, 35.889524);
         LatLng amman = new LatLng(31.904623, 35.887657);
         LatLng AmmanCenter = new LatLng(31.953838, 35.910577);
-       // mMap.clear();
+        // mMap.clear();
         mMap.addMarker(new MarkerOptions().position(AmmanCenter).title("Amman Center")).setAlpha(0.0f);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"))
                 //  .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -109,17 +150,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                Log.d(TAG, "onMarkerClick: " + marker);
+                Log.d(TAG, "onMarkerClick: " + marker.getTitle());
 
-//                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MapsActivity.this, R.drawable.alert));
-//                builder.setMessage("hi eyad");
-//                builder.setTitle("title");
-//                builder.setPositiveButton(android.R.string.ok, null);
-//                AlertDialog dialog = builder.create();
-//                dialog.show();
+                @SuppressLint("ResourceType") AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AlertDialogTheme);
+                builder.setMessage("hi eyad");
+                builder.setTitle(marker.getTitle());
+                builder.setPositiveButton(android.R.string.ok, null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 15));
 
                 return false;
+            }
+        });
+    }
+
+    public void getAllProviders() {
+        Call<List<Provider>> call = jsonPlaceHolderApi.getLatLng();
+
+        call.enqueue(new Callback<List<Provider>>() {
+            @Override
+            public void onResponse(Call<List<Provider>> call, Response<List<Provider>> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "onResponse: " + response.code());
+                    return;
+                }
+
+                List<Provider> providers = response.body();
+                LatLng latLng;
+                assert providers != null;
+                for (Provider provider : providers) {
+                    latLng = new LatLng(provider.getLatitude(), provider.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latLng).title("Api Marker"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Provider>> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
