@@ -5,8 +5,6 @@ import android.os.Bundle;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class SectionPage extends AppCompatActivity {
 
@@ -31,10 +29,10 @@ public class SectionPage extends AppCompatActivity {
         images.add(R.drawable.scissor);
         images.add(R.drawable.las);
 
-        RecyclerView recyclerView = findViewById(R.id.recycleViewSections);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
-        RecycleViewAdapter adapter = new RecycleViewAdapter(getApplicationContext(), titles, images);
-        recyclerView.setAdapter(adapter);
+//        RecyclerView recyclerView = findViewById(R.id.recycleViewSections);
+//        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
+//        RecycleViewAdapter adapter = new RecycleViewAdapter(getApplicationContext(), titles, images);
+//        recyclerView.setAdapter(adapter);
 
     }
 }

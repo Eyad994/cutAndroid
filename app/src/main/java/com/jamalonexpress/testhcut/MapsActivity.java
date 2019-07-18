@@ -153,7 +153,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d(TAG, "onMarkerClick: " + marker.getTitle());
 
                 @SuppressLint("ResourceType") AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AlertDialogTheme);
+                //builder.setView(R.layout.activity_section_page);
                 builder.setMessage("hi eyad");
+                builder.setIcon(R.drawable.twitter);
                 builder.setTitle(marker.getTitle());
                 builder.setPositiveButton(android.R.string.ok, null);
                 AlertDialog dialog = builder.create();
