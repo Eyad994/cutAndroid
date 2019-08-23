@@ -1,7 +1,6 @@
 package com.jamalonexpress.testhcut;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,13 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,7 +25,6 @@ import com.linroid.filtermenu.library.FilterMenuLayout;
 
 import java.util.List;
 
-import androidx.fragment.app.FragmentActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,16 +32,21 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ExampleDialog2.ExampleDialogListener {
 
     private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
     JsonPlaceHolderApi jsonPlaceHolderApi;
+    DatePickerDialog.OnDateSetListener datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        // testFunc();
+
+        // onDialogBtnClicked();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -97,26 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 })
                 .build();
-
-
-//        CircleMenu circleMenu = findViewById(R.id.circle_menu);
-//        circleMenu.setMainMenu(Color.RED, R.drawable.common_google_signin_btn_icon_dark, R.drawable.common_google_signin_btn_icon_disabled)
-//                .addSubMenu(Color.BLUE, R.drawable.facebook)
-//                .addSubMenu(Color.RED, R.drawable.pinterest)
-//                .addSubMenu(Color.BLUE, R.drawable.linkedin)
-//                .addSubMenu(Color.BLUE, R.drawable.twitter)
-//                .addSubMenu(Color.BLACK, R.drawable.vk)
-//                .setOnMenuSelectedListener(new OnMenuSelectedListener() {
-//                    @Override
-//                    public void onMenuSelected(int i) {
-//
-//                        Toast.makeText(MapsActivity.this, "Selected " + arrayName[i], Toast.LENGTH_SHORT).show();
-//                        Log.d(TAG, "onMenuSelected: " + arrayName[i].equals("Facebook"));
-//                    }
-//                });
-
     }
-
 
     /**
      * Manipulates the map once available.
@@ -146,24 +131,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(amman).title("Marker in Amman"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AmmanCenter, 12));
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                Log.d(TAG, "onMarkerClick: " + marker.getTitle());
-
-                @SuppressLint("ResourceType") AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AlertDialogTheme);
-                //builder.setView(R.layout.activity_section_page);
-                builder.setMessage("hi eyad");
-                builder.setIcon(R.drawable.twitter);
-                builder.setTitle(marker.getTitle());
-                builder.setPositiveButton(android.R.string.ok, null);
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 15));
-
-                return false;
-            }
+        mMap.setOnMarkerClickListener(marker -> {
+              openDateDialog(marker.getTitle());
+//            Log.d(TAG, "onMarkerClick: " + marker.getTitle());
+//            @SuppressLint("ResourceType") AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this, R.style.AlertDialogTheme);
+//            builder.setView(R.layout.layout_dialog_material);
+//            //builder.setMessage("hi eyad");
+//            builder.setIcon(R.drawable.twitter);
+//            builder.setTitle(marker.getTitle());
+//            builder.setPositiveButton(android.R.string.ok, null);
+//            AlertDialog dialog = builder.create();
+//            dialog.show();
+            //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 15));
+            return false;
         });
     }
 
@@ -201,5 +181,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap changeSize = Bitmap.createScaledBitmap(bitmap, height, width, false);
 
         return changeSize;
+    }
+
+    public void openDateDialog(String title) {
+        ExampleDialog2 exampleDialog2 = new ExampleDialog2();
+        exampleDialog2.setApiTitle(title);
+        exampleDialog2.show(getSupportFragmentManager(), "example dialog");
+    }
+
+    @Override
+    public void applyInputs(String date) {
+        // text.setText(date);
     }
 }
